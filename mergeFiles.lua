@@ -1,3 +1,5 @@
+#!/bin/lua
+
 --===== conf =====--
 local conf = {
 	paths = {
@@ -6,7 +8,7 @@ local conf = {
 		output = "output",
 	}
 }
-local version = "v0.1"
+local version = "0.1.1"
 
 --===== argparse =====--
 -- The MIT License (MIT)
@@ -1651,7 +1653,8 @@ setmetatable(loadedFragments, {__index = function(self, index)
 			os.exit(1)
 		end
 	end
-	 
+	
+	result = string.gsub(result, "%%", "%%%%") --importat for later gsub operations.
 	self[index] = result
 	return result
 end})
@@ -1700,6 +1703,7 @@ for inputFileName in lfs.dir(conf.paths.input) do
 					
 					if string.find(fileString, fragmentPattern) then
 						log("[INFO]: Inserting fragment: '" .. fragmentFileName .. "', in: '" .. inputFilePath .. "'")
+
 						fileString = string.gsub(fileString, fragmentPattern, loadedFragments[fragmentFileName])
 					end
 				end
